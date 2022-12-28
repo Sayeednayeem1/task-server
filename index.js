@@ -15,11 +15,28 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.qk4n58g.mongodb.net/?retryWrites=true&w=majority`;
 console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-    const collection = client.db("test").collection("devices");
-    // perform actions on the collection object
-    client.close();
-});
+
+// todo main function
+
+async function run() {
+    try {
+        const taskCollections = client.db('tasksCollection').collection('tasks');
+
+        // todo get api
+        app.get('/tasks', async(req, res) => {
+            const query = {};
+            const cursor = taskCollections.find(query);
+            const tasks = await cursor.toArray();
+            res.send(tasks);
+        });
+
+    }
+    finally {
+
+    }
+}
+
+run().catch(err => console.error(err));
 
 
 
