@@ -21,6 +21,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const taskCollections = client.db('tasksCollection').collection('tasks');
+        const tasksCollection = client.db('tasksCollection').collection('myTasks');
 
         // todo get api
         app.get('/tasks', async(req, res) => {
@@ -28,6 +29,12 @@ async function run() {
             const cursor = taskCollections.find(query);
             const tasks = await cursor.toArray();
             res.send(tasks);
+        });
+        // todo tasks api post collections
+        app.post('/myTasks', async(req, res) => {
+            const task = req.body;
+            const result = await tasksCollection.insertOne(task);
+            res.send(result);
         });
 
     }
