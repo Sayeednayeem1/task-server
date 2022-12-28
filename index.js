@@ -31,6 +31,21 @@ async function run() {
             res.send(tasks);
         });
         // todo tasks api post collections
+        
+        // todo get post api data
+        app.get('/myTasks', async(req, res) => {
+            let query = {};
+            if (req.query.email) {
+                query: {
+                    email: req.query.email
+                }
+            }
+            const cursor = tasksCollection.find(query);
+            const tasks = await cursor.toArray();
+            res.send(tasks);
+        });
+
+        // todo post api data
         app.post('/myTasks', async(req, res) => {
             const task = req.body;
             const result = await tasksCollection.insertOne(task);
