@@ -58,6 +58,13 @@ async function run() {
             const result = await tasksCollection.insertOne(task);
             res.send(result);
         });
+        // todo delete the data
+        app.delete('/myTasks/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await tasksCollection.deleteOne(query);
+            res.send(result);
+        });
 
     }
     finally {
