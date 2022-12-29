@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 require('dotenv').config();
 
@@ -24,16 +24,16 @@ async function run() {
         const tasksCollection = client.db('tasksCollection').collection('myTasks');
 
         // todo get api
-        app.get('/tasks', async(req, res) => {
+        app.get('/tasks', async (req, res) => {
             const query = {};
             const cursor = taskCollections.find(query);
             const tasks = await cursor.toArray();
             res.send(tasks);
         });
         // todo tasks api post collections
-        
+
         // todo get post api data
-        app.get('/myTasks', async(req, res) => {
+        app.get('/myTasks', async (req, res) => {
             let query = {};
             if (req.query.email) {
                 query: {
@@ -44,9 +44,16 @@ async function run() {
             const tasks = await cursor.toArray();
             res.send(tasks);
         });
+        // todo get myTasks based on _id
+        app.get('/myTasks/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const tasks = await tasksCollection.findOne(query);
+            res.send(tasks);
+        });
 
         // todo post api data
-        app.post('/myTasks', async(req, res) => {
+        app.post('/myTasks', async (req, res) => {
             const task = req.body;
             const result = await tasksCollection.insertOne(task);
             res.send(result);
